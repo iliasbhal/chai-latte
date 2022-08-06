@@ -1,3 +1,5 @@
+<img src="./.github/repo_hero.png" />
+
 ## ✨ What is chai-latte?
 
 Let's you create expressive & readable fluent interface libraries. <br/>
