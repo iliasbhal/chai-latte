@@ -5,7 +5,10 @@
 Let's you create expressive & readable fluent interface libraries. <br/>
 Think of it as a simple tool to buid things that looks like [chaijs](https://www.chaijs.com/) but it can do anything, not just testing :).
 
-Building expressive fluent interfaces isn't easy as you can quickly run into conlficts between expressions. This tool will do all the heavy lifting for you. Just add expressions and watch it just work ✨.
+## 🤔 Motication
+
+Building expressive fluent interfaces isn't easy as you can quickly run into conlficts between expressions. This tool will do all the heavy lifting for you removing all the repetitive and soul crushing things we should do to create such libraries.
+You can now focus on adding expressions and watch it just work ✨.
 
 ## :rocket: Quick Start!
 
