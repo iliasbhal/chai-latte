@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1",
+  "version": "0.0.2",
   "name": "chai-latte",
   "description": "Toolkit to build expressive & readable fluent interface libraries.",
   "author": "Ilias",
