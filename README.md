@@ -1,4 +1,4 @@
-<img src="./.github/repo_hero.png" />
+<img src="./public/repo_hero.png" />
 
 ## ✨ What is chai-latte?
 
@@ -104,7 +104,7 @@ npx chai-latte ./index.ts
 ```
 
 <br />
-<img src="./.github/repo_footer.png" />
+<img src="./public/repo_footer.png" />
 <br />
 
 ## :handshake: Contributing
