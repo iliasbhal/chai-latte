@@ -2,19 +2,27 @@
   "version": "0.0.4",
   "name": "chai-latte",
   "description": "Toolkit to build expressive & readable fluent interface libraries.",
-  "author": "Ilias",
-  "license": "MIT",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
-  "bin": {
-    "chai-latte": "./build/cli.js"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iliasbhal/chai-latte.git"
   },
+  "author": "Ilias Bhallil <ilias.bhal@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iliasbhal/chai-latte/issues"
+  },
+  "homepage": "https://github.com/iliasbhal/chai-latte",
   "scripts": {
     "setup": "yarn build && npm link && npm link chai-latte",
     "dev": "yarn setup && yarn build:watch",
     "test": "tsdx test",
     "build": "tsc",
     "build:watch": "tsc -w"
+  },
+  "bin": {
+    "chai-latte": "./build/cli.js"
   },
   "peerDependencies": {},
   "dependencies": {},
