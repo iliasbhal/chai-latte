@@ -1,6 +1,7 @@
 {
   "version": "0.0.1",
   "name": "chai-latte",
+  "description": "Toolkit to build expressive & readable fluent interface libraries.",
   "author": "Ilias",
   "license": "MIT",
   "main": "build/index.js",
