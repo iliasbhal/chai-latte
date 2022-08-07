@@ -3,9 +3,9 @@
 ## ✨ What is chai-latte?
 
 Let's you create expressive & readable fluent interface libraries. <br/>
-Think of it as a simple tool to buid things that looks like [chaijs](https://www.chaijs.com/).
+Think of it as a simple tool to buid things that looks like [chaijs](https://www.chaijs.com/) but it can do anything, not just testing :).
 
-Building expressive fluent interfaces isn't easy as you can quickly run into conlficts between expressions. This tool will do all the heavy lifting for you.
+Building expressive fluent interfaces isn't easy as you can quickly run into conlficts between expressions. This tool will do all the heavy lifting for you. Just add expressions and watch it just work ✨.
 
 ## :rocket: Quick Start!
 
@@ -74,6 +74,8 @@ check(false).to.be(false); // false + will log: 'Booleans do not match!!';
 check.if(10).to.be.greater.than(2); // true
 ```
 
+<br />
+<img src="./.github/repo_footer.png" />
 <br />
 
 ## :handshake: Contributing
