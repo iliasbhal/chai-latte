@@ -1,7 +1,6 @@
 import { getPrototypeChain } from './lib/getPrototypeChain';
 import { ConfigurableCallback } from './lib/ConfigurableCallback';
 import { FluentBuilder, RegisteredAPI } from './register';
-const tuple = <T extends any[]>(...args: T) => args;
 
 export const combine = (...registeredAPIs: RegisteredAPI<any>[]) => {
   const sharedArgs = [];
@@ -134,8 +133,8 @@ const avoidFluentOverride = (source, target) => {
   const isTargetFinal = FluentBuilder.isFinalCallback(target);
   if (isSrcFinal || isTargetFinal) {
     // should not override a preexisting API.
-    // ex: the.guy('xyz') and the.guy('xyz').are.incompatible();
-    // because the latter overrides the former.
+    // ex: defining two expressions like the.guy('xyz') and the.guy('xyz').are.incompatible();
+    // will cause a conflict, the latter overrides the former.
     throw new Error('Incompatible Fluent API');
   }
 }
