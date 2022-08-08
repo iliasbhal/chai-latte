@@ -2,7 +2,7 @@
 import path from 'path';
 import dedent from 'dedent';
 import { createTypegingForBuilders, generateTypedApiFromPath } from '..';
-import { Builder } from '../..'
+import { Builder } from '../../builder'
 
 describe('Codegen', () => {
     it('should throw when file doesnt exist', async () => {

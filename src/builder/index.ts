@@ -1,7 +1,7 @@
 import { combine } from './combine';
 import { register } from './register';
 import { compile } from './compile';
-import { createTypegingForBuilders } from './codegen';
+import { createTypegingForBuilders } from '../codegen';
 
 export class Builder {
   static compile = compile;

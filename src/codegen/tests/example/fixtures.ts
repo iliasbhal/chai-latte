@@ -1,4 +1,4 @@
-import { Builder } from '../../..';
+import { Builder } from '../../../builder';
 
 export default Builder.compile(
   Builder.register(

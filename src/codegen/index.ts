@@ -1,9 +1,9 @@
 import fs from 'fs-extra';
 import path from 'path';
 import dedent from 'dedent';
-import { ConfigurableCallback } from '../lib/ConfigurableCallback';
-import { extractArguments } from '../lib/extractArguments';
-import { RegisteredAPI } from '../register';
+import { ConfigurableCallback } from '../builder/lib/ConfigurableCallback';
+import { extractArguments } from '../builder/lib/extractArguments';
+import { RegisteredAPI } from '../builder/register';
 
 export interface InputOutputConfig {
   input: string
