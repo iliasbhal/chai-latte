@@ -1,5 +1,5 @@
 {
-  "version": "0.0.5",
+  "version": "0.0.6",
   "name": "chai-latte",
   "description": "Toolkit to build expressive & readable fluent interface libraries.",
   "main": "build/index.js",
@@ -8,6 +8,14 @@
     "type": "git",
     "url": "git+https://github.com/iliasbhal/chai-latte.git"
   },
+  "keywords": [
+    "chai",
+    "latte",
+    "fluent",
+    "expressive",
+    "interface",
+    "library"
+  ],
   "author": "Ilias Bhallil <ilias.bhal@gmail.com>",
   "license": "MIT",
   "bugs": {
