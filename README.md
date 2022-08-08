@@ -2,23 +2,30 @@
 
 ## ✨ What is chai-latte?
 
-Let's you create expressive & readable fluent interface libraries. <br/>
-Think of it as a simple tool to buid things that looks like [chaijs](https://www.chaijs.com/) but it can do anything, not just testing :).
+It's a tool for building expressive fluent interface libraries. <br/>
+Think of it as a simple tool to buid things that looks like [chaijs](https://www.chaijs.com/) but not necessarly related to testing. It can be about anyhting :).
 
 ## 🤔 Motication
 
-Building expressive fluent interfaces isn't easy. As you add new expressions, it quickly become un-maintainable and run into conflict between expressions. This tool will do all the heavy lifting for you, removing all the repetitive and soul crushing tasks, needed do to create such libraries. Now, You can focus on adding expressions and watch it just work ✨.
+<p>Building expressive fluent interfaces isn't easy. the more expressions you add the more it becomes un-maintainable. You'll quickly run into conflicts between expressions.</p>
+<p>This tool will do all the heavy lifting for you, removing all the repetitive and soul crushing tasks needed do to create such libraries. Now, You can focus on adding expressions and it will just work! ✨.</p>
 
-## :rocket: Quick Start!
 
+## 🔌 Installation
 It's available on npm. To install it, type:
 
 ```sh
-yarn add -D chai-latte
+npm i chai-latte
+```
+or
+```sh
+yarn add chai-latte
 ```
 
+## :rocket: Quick Start!
+
 Lets create a library that will be able to create arrays and add number to it.
-I know... The example is not exiting 😅. But let's create it anyway!
+I know... The example is not exiting 😅. But let's create it anyway! The library we'll create should be able to execute the command below:
 
 ```tsx
 import example from './the/library/we/will/create';
@@ -65,7 +72,7 @@ const ourLibrary = compile(
 // 
 
 const { create } = ourLibrary;
-const arr = create.an.array(); // it returned [] and logged 'Array Created!'.
+const arr = create.an.array(); // [] and logged 'Array Created!'.
 ```
 
 3. Add the other expressions! In order to do so, just add them as extra argument to the `compile` function. See example:
@@ -82,7 +89,7 @@ const ourLibrary = compile(
   expression(({ add }) => add(Number).to(Array), addNumToArray),
 );
 ```
-4. Congrtulations!! 🎉 you can now use your library! in the example above, `ourLibrary` implements every expression provied to the `compile` function. See example:
+4. Congrtulations!! 🎉 You can now use your library! See example:
 
 ```ts
 const { create, add } = ourLibrary;
@@ -97,20 +104,50 @@ add(12).to(arr2);
 console.log(arr2) // logs [4, 5, 12]
 ```
 
-5. Optional. To make your library type-safe, we can generate typescript types from the compiled fluent interface we just created. This will give a better exprience to your users as it will improve api discovery and enable autocomplete with their IDE's. The command line will create a new file called `generated.ts`. Use it as your entry file. Type this in the terminal:
+## 📚 Typescript
+To make your library type-safe, we can generate typescript types from the compiled fluent interface. The command line will create a new file called `generated.ts` that will export you the same fluent interface but fully typed. Use this file as your new entry file.<br/><br/>
+To create the `generated.ts` type this in the terminal:
 
 ```sh
 npx chai-latte ./index.ts
 ```
 
-<br />
-<img src="https://raw.githubusercontent.com/iliasbhal/chai-latte/main/public/repo_footer.png" />
-<br />
+## 🙈 Things to know & Limitations
 
+1. When creating expressions, you have to provide a class for each callable parts. This is how the engine avoid conflicts.
+```tsx
+// example
+class Human {}
+class Child extends Human {}
+
+the(Human).can.jump(); // expression 1
+the(Child).will.play(); // expression 2
+
+// if we try to call
+const human = new Human();
+const child = new Child();
+the(child).can.jump(); // <-- will work since Child inherits Human
+the(human).will.play(); // <- won't work because .will.play() isn't defined for expression 2
+```
+2. The last word on an expression has to be function. It can accept an argument.
+```tsx
+// example
+the(Human).works.up.until(Number);
+the(Human).can.jump();
+the(Human).is.alive // <- won't compile because it doesn't end with a function
+```
+
+3. Expressions that share an exact same code path and signature cannot co-exist. Here is an example of 3 expressions to illustrate the issue:
+```tsx
+// example
+the(Human).can.say('Hi!');
+the(Baby).can.say('Hi!'); // <- will work, because Human and Baby are different classes
+the(Baby).can.say('Hi!').and.say('I\'m hungry'); // <- won't compile
+```
 ## :handshake: Contributing
 
 Thank you very much for considering to contribute! <br />
-Please create issues, PRs and stuff. Your contribution is very much welcome!.
+Please don't hesitate to create issues, PRs or just . Your contribution is very much welcome!.
 
 ## :book: License
 
@@ -135,3 +172,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+<br />
+<img src="https://raw.githubusercontent.com/iliasbhal/chai-latte/main/public/repo_footer.png" />
+<br />
