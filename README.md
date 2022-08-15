@@ -3,7 +3,7 @@
 ## ✨ What is chai-latte?
 
 It's a tool for building expressive fluent interface libraries. <br/>
-Think of it as a simple tool to buid things that looks like [chaijs](https://www.chaijs.com/) but not necessarly related to testing. It can be about anyhting :).
+Think of it as a simple tool to buid things à la [chaijs](https://www.chaijs.com/) but not necessarly related to testing. It can be about anyhting :).
 
 ## 🤔 Motication
 
@@ -57,7 +57,7 @@ const ourFirstExpression = expression(
 2. Make the expression executable. `expression` alone just returns a configuration object. we should `compile` it in order to use it. See example:
 
 ```ts
-import { compile } from 'chai-latte';
+import { expression, compile } from 'chai-latte';
 
 const ourLibrary = compile(
   expression(
@@ -105,7 +105,7 @@ console.log(arr2) // logs [4, 5, 12]
 ```
 
 ## 📚 Typescript
-To make your library type-safe, we can generate typescript types from the compiled fluent interface. The command line will create a new file called `generated.ts` that will export you the same fluent interface but fully typed. Use this file as your new entry file.<br/><br/>
+To make your library type-safe, you can generate the corresponding typings using the command line. It will create a new file called `generated.ts` that will export the same fluent interface but fully typed. Then simply use this new file as your entry file!<br/><br/>
 To create the `generated.ts` type this in the terminal:
 
 ```sh
@@ -137,7 +137,7 @@ the(Human).can.jump();
 the(Human).is.alive // <- won't compile because it doesn't end with a function
 ```
 
-3. Expressions that share an exact same code path and signature cannot co-exist. Here is an example of 3 expressions to illustrate the issue:
+3. Expressions that share the exact same code path and argument types cannot co-exist. Here is an example of 3 expressions to illustrate the issue:
 ```tsx
 // example
 the(Human).can.say('Hi!');
