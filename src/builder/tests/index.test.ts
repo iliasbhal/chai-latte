@@ -170,7 +170,14 @@ describe('Single Builder', () => {
     expect(callback).not.toHaveBeenCalled();
   });
 
+  it('should check that callback uses same number of arguments as expression', () => {
+    throw new Error('TODO');
+  });
+
   it.skip('can be chained liked regular objects', () => {
+    // Not working at the moment
+    // Everytine we access an attribute or call a function
+    // we should forward a copy of the arguments instead of using the same reference
     const [builder1, callback1] = buildFluentMock(({ the }) => the(Number).name(Number).do(Number));
     const { the } = Builder.combine(builder1);
 

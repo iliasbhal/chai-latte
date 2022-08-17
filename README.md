@@ -3,9 +3,9 @@
 ## ✨ What is chai-latte?
 
 It's a tool for building expressive fluent interface libraries. <br/>
-Think of it as a simple tool to buid things à la [chaijs](https://www.chaijs.com/) but not necessarly related to testing. It can be about anyhting :).
+Think of it as a simple tool to buid libraries à la [chaijs](https://www.chaijs.com/) but not necessarly related to testing. It can be about anyhting :).
 
-## 🤔 Motication
+## 🤔 Motivation
 
 <p>Building expressive fluent interfaces isn't easy. the more expressions you add the more it becomes un-maintainable. You'll quickly run into conflicts between expressions.</p>
 <p>This tool will do all the heavy lifting for you, removing all the repetitive and soul crushing tasks needed do to create such libraries. Now, You can focus on adding expressions and it will just work! ✨.</p>
