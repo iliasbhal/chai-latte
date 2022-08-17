@@ -147,7 +147,7 @@ the(Baby).can.say('Hi!').and.say('I\'m hungry'); // <- won't compile
 ## :handshake: Contributing
 
 Thank you very much for considering to contribute! <br />
-Please don't hesitate to create issues, PRs or just . Your contribution is very much welcome!.
+Please don't hesitate to create issues and PRs. Your contribution is very much welcome!.
 
 ## :book: License
 
