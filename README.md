@@ -127,7 +127,7 @@ the(Child).will.play(); // expression 2
 const human = new Human();
 const child = new Child();
 the(child).can.jump(); // <-- will work since Child inherits Human
-the(human).will.play(); // <- won't work because .will.play() isn't defined for expression 2
+the(human).will.play(); // <- won't work because .will.play() isn't defined for expression 1
 ```
 2. The last word on an expression has to be function. It can accept an argument.
 ```tsx
