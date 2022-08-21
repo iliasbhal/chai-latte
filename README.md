@@ -144,6 +144,15 @@ the(Human).can.say('Hi!');
 the(Baby).can.say('Hi!'); // <- will work, because Human and Baby are different classes
 the(Baby).can.say('Hi!').and.say('I\'m hungry'); // <- won't compile
 ```
+
+## 📚 Typescript
+You can generate the corresponding typings using the command line. It will create a new file called `generated.ts` next to `index.ts`.
+This file will export yout same fluent interface but fully typed. Use this new file as your entry file to enjoy the typngs!<br/><br/>
+Ensure `ts-node` is installed locally then type this in the terminal:
+
+```sh
+npx chai-latte
+```
 ## :handshake: Contributing
 
 Thank you very much for considering to contribute! <br />
