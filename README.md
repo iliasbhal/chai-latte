@@ -89,7 +89,7 @@ const ourLibrary = compile(
   expression(({ add }) => add(Number).to(Array), addNumToArray),
 );
 ```
-4. Congrtulations!! 🎉 You can now use your library! See example:
+4. Congratulations!! 🎉 You can now use your library! See example:
 
 ```ts
 const { create, add } = ourLibrary;

@@ -25,6 +25,7 @@
   "scripts": {
     "setup": "yarn build && npm link && npm link chai-latte",
     "dev": "yarn setup && yarn build:watch",
+    "deploy": "yarn test && yarn build && npm publish",
     "test": "jest",
     "build": "tsc",
     "build:watch": "tsc -w"
