@@ -1,12 +1,12 @@
-import { Builder } from '../../../builder';
+import { compile, expression } from '../../../';
 
-export default Builder.compile(
-  Builder.register(
+export default compile(
+  expression(
     ({ the }) => the.man.is.alive(Boolean).and.well(Boolean),
     (isAlive: Boolean, isWell: Boolean) => 'First',
   ),
 
-  Builder.register(
+  expression(
     ({ the }) => the(Boolean).and.well(Boolean),
     (isAlive: Boolean, isWell: Boolean) => 'Second',
   )
