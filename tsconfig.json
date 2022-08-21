@@ -8,7 +8,7 @@
     "rootDir": "./src",
     "outDir": "build",
 
-    "module": "esnext",
+    "module": "commonjs",
     "target": "ESNext",
     "lib": ["esnext"],
     "importHelpers": true,

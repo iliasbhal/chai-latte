@@ -6,7 +6,8 @@ import { extractArguments } from '../builder/lib/extractArguments';
 import { RegisteredAPI } from '../builder/register';
 
 export interface InputOutputConfig {
-  input: string
+  input: string,
+  output?: string,
 }
 
 export const readConfigFile = (filePath: string) => {
@@ -39,8 +40,9 @@ const getOutputFilePath = async (config: InputOutputConfig) => {
     filePaths.pop();
     configFilePath = filePaths.join('/');
   }
-  // stats.isFile()
-  const relativePath = path.relative(__dirname, configFilePath + '/generated.ts');
+
+  const outputFileName = config.output || 'generated.ts';
+  const relativePath = path.relative(__dirname, configFilePath + '/' + outputFileName);
   const absolutePath = path.resolve(__dirname, relativePath);
   return absolutePath;
 }
