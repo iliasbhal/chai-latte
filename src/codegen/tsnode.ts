@@ -23,9 +23,7 @@ const mergeScriptWithArguments = (script: string[], ...variables: unknown[]) => 
 export const tsnode = (script: TemplateStringsArray, ...variables: unknown[]) => {
   const binPath = getBinPath();
   const tsNodePath = `${binPath}/ts-node`;
-
   const mergedString = mergeScriptWithArguments(script as any, ...variables);
-  console.log(mergedString);
 
   const child = cp.execSync(`${tsNodePath} -e "
     ${mergedString}
