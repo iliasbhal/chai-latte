@@ -170,7 +170,7 @@ describe('Single Builder', () => {
     expect(callback).not.toHaveBeenCalled();
   });
 
-  it('should check that callback uses same number of arguments as expression', () => {
+  it.skip('should check that callback uses same number of arguments as expression', () => {
     throw new Error('TODO');
   });
 
