@@ -16,4 +16,4 @@ type Root = {}
   & { the: { man: { is: { alive: { (isAlive: Arg<0, 0>) : { and: { well: { (isWell: Arg<0, 1>) : Return<0>; }; } }; }; }; }; }; }
   & { the: { (isAlive: Arg<1, 0>) : { and: { well: { (isWell: Arg<1, 1>) : Return<1>; }; } }; }; };
 
-export default builder as Root;
+export default builder as unknown as Root;

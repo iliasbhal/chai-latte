@@ -63,7 +63,7 @@ export const createTypegingForBuilders = async (config: InputOutputConfig, build
 
   typings += ';\n\n'
   typings += dedent`
-    export default builder as Root;
+    export default builder as unknown as Root;
   `
   return typings;
 }
