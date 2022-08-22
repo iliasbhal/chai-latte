@@ -1,5 +1,5 @@
 {
-  "version": "0.0.10",
+  "version": "0.0.11",
   "name": "chai-latte",
   "description": "Toolkit to build expressive & readable fluent interface libraries.",
   "main": "build/index.js",
