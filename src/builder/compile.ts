@@ -1,7 +1,7 @@
 import { combine } from './combine';
 import { RegisteredAPI } from './register';
 
-interface CompiledBuilder<T> {
+export interface CompiledBuilder<T> {
   [key: string]: any;
   __expressions: T;
 };
