@@ -51,10 +51,25 @@ export class FluentBuilder<Callback extends Function> {
     return isLastPointerCallback;
   }
 
-  handleFunctionCalled(arg: unknown) {
+  debugId = '';
+  updateDebugProp(prop) {
+    this.debugId += this.debugId ? '.' + prop : prop;
+  }
+
+  updateDebugFunction(arg) {
+    if (typeof arg === 'undefined') {
+      this.debugId += '()';
+      return;
+    }
+
+    this.debugId += '(' + arg.name + ')';
+  }
+
+  handleFunctionCalled(arg: any) {
     const fluentFunction = this.createConfigurableCallback();
     this.pointer.overrideLastPointer(fluentFunction.callback)
     fluentFunction.updateArg(arg);
+    this.updateDebugFunction(arg);
   }
 
   handlePropertyAccess(prop: string) {
@@ -67,6 +82,7 @@ export class FluentBuilder<Callback extends Function> {
       fluentFunction.updateReturn(nextReturn);
     }
 
+    this.updateDebugProp(prop);
     this.pointer.accessProp(prop);
     this.pointer.movePointer(prop);
   }

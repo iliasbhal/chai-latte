@@ -1,4 +1,5 @@
 import { Builder } from '..';
+import { expression } from '../../';
 import { combineTest } from './lib/combineTest';
 
 function createBuildTest(buildCallback, createTests, config: { only } = { only: false }) {
@@ -206,6 +207,13 @@ describe('Single Builder', () => {
 
     expect(callback1).toHaveBeenCalledTimes(1);
     expect(callback1).toHaveBeenCalledWith(1,3,4);
+  })
+})
+
+describe('Debug', () => {
+  it('should create a debugId for each expression', () => {
+    const exp = expression(({ the }) => the(String).name.do(String).it(String), () => {});
+    expect(exp.builder.debugId).toEqual('the(String).name.do(String).it(String)');
   })
 })
 
