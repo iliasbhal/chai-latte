@@ -6,7 +6,6 @@ describe.skip('CLI', () => {
   const fixtures = path.resolve(__dirname, 'fixtures');
   const config = path.resolve(fixtures, 'codegen.json');
   const index = path.resolve(fixtures, 'index.ts');
-  // const folder = path.resolve(__dirname, '..', '.codegen');
 
   beforeAll(() => {
     fs.writeJsonSync(config, {
