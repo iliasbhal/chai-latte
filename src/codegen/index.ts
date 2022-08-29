@@ -77,13 +77,12 @@ export const getBuilderFromLocalFile = async (config: InputOutputConfig) => {
 const buildTypeForObject = ({ api, builder, args, index }) => {
   let typeings = '';
 
-  Object.entries(api).map(([key, value]) => {
-    const innerType = typeof value === 'function'
-      ? buildTypesForFunction({ callback: value, builder, args, index })
-      : buildTypeForObject({ api: value, builder, args, index });
+  const [key, value] = Object.entries(api)[0];
+  const innerType = typeof value === 'function'
+    ? buildTypesForFunction({ callback: value, builder, args, index })
+    : buildTypeForObject({ api: value, builder, args, index });
 
-    typeings += `${key}: { ${innerType}; }`;
-  })
+  typeings += `${key}: { ${innerType}; }`;
 
   return typeings;
 }
