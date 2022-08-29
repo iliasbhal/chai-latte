@@ -23,7 +23,7 @@ program.parse();
 
 const options = program.opts();
 const entryFile = options.input || './index';
-const outputFileName = options.output + '.ts' || 'generated.ts';
+const outputFileName = options.output ? `${options.output}.ts` : 'generated.ts';
 
 // We need to run the script with ts-node 
 // to be able to import entry ts file
