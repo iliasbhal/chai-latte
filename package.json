@@ -35,6 +35,7 @@
   },
   "peerDependencies": {},
   "dependencies": {
+    "chokidar": "^3.5.3",
     "commander": "^9.4.0",
     "tslib": "^2.4.0"
   },

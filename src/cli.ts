@@ -1,9 +1,10 @@
 #! /usr/bin/env node
 
-import { tsnode } from './codegen/tsnode';
 import { program } from 'commander';
+import chokidar from 'chokidar';
 import fs from 'fs';
 import path from 'path';
+import { compileUsingTsNode } from './codegen/actions/compileUsingTsNode';
 
 const getPkgInfo = () => {
   const pkgjsonPath = path.resolve(__dirname, '..', 'package.json');
@@ -16,21 +17,32 @@ const pkgInfo = getPkgInfo();
 
 program.name(pkgInfo.name)
   .version(pkgInfo.version)
-  .option('-i --input <path>', 'input file path')
-  .option('-i --output <filename>', 'desired generated file name');
+  .option('-i --input <path>', 'Input file path that should be typed')
+  .option('-o --output <filename>', 'Desired generated file name')
+  .option('-w --watch', 'Watch for changes and re-generate typed file');
 
 program.parse();
 
 const options = program.opts();
-const entryFile = options.input || './index';
-const outputFileName = options.output ? `${options.output}.ts` : 'generated.ts';
 
-// We need to run the script with ts-node 
-// to be able to import entry ts file
-tsnode`
-  import { generateTypedApiFromPath } from 'chai-latte';
-  generateTypedApiFromPath({
-    input: '${entryFile}',
-    output: '${outputFileName}'
+const input = options.input || './index';
+const output = options.output ? `${options.output}.ts` : 'generated.ts';
+
+const runCompilation = () => {
+  console.log('Start compiling...');
+  
+  compileUsingTsNode({
+    input,
+    output,
   });
-`;
+  
+  console.log('Done!');
+}
+
+runCompilation();
+
+if (options.watch) {
+  const watchPath = path.resolve(process.cwd(), input + '.ts');
+  chokidar.watch(watchPath)
+    .on('change', runCompilation);
+}
