@@ -8,7 +8,7 @@
 import builder from './fixtures';
 
 type Expressions = typeof builder.__expressions;
-type ExpressionCallback<Idx extends number> = Expressions[Idx]['callback'];
+type ExpressionCallback<Idx extends number> = Expressions[Idx][0]['callback'];
 type Arg<Idx extends number, ArgIndex extends number> = Parameters<ExpressionCallback<Idx>>[ArgIndex];
 type Return<Idx extends number> = ReturnType<ExpressionCallback<Idx>>;
 
@@ -31,6 +31,16 @@ type Root = {
       and: {
         well: {
           (bool: Arg<1, 1>) : Return<1>;
+        };
+        very: {
+          well: {
+            (bool: Arg<1, 1>) : Return<1>;
+          };
+        };
+        realy: {
+          well: {
+            (bool: Arg<1, 1>) : Return<1>;
+          };
         };
       };
     };

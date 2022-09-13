@@ -202,7 +202,7 @@ const createBaseTypings = (config: InputOutputConfig) => {
     import builder from '${localPath}';
 
     type Expressions = typeof builder.__expressions;
-    type ExpressionCallback<Idx extends number> = Expressions[Idx]['callback'];
+    type ExpressionCallback<Idx extends number> = Expressions[Idx][0]['callback'];
     type Arg<Idx extends number, ArgIndex extends number> = Parameters<ExpressionCallback<Idx>>[ArgIndex];
     type Return<Idx extends number> = ReturnType<ExpressionCallback<Idx>>;
   `

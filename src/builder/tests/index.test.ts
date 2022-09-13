@@ -1,5 +1,5 @@
-import { Builder } from '..';
 import { expression } from '../../';
+import { combine } from '../combine';
 import { combineTest } from './lib/combineTest';
 
 function createBuildTest(buildCallback, createTests, config: { only } = { only: false }) {
@@ -8,7 +8,7 @@ function createBuildTest(buildCallback, createTests, config: { only } = { only: 
 
   const testBody = () => {
     const callback = jest.fn();
-    const { api } = Builder.register(buildCallback,callback);
+    const [{ api }] = expression(buildCallback,callback);
   
     buildCallback(api);
     createTests(callback);
@@ -23,7 +23,7 @@ function createBuildTest(buildCallback, createTests, config: { only } = { only: 
 
 function buildFluentMock(buildCallback, forceCallback?) {
   const callback = forceCallback ?? jest.fn();
-  const registeredFluentAPI = Builder.register(buildCallback,callback);
+  const [registeredFluentAPI] = expression(buildCallback,callback);
   return [registeredFluentAPI.api, callback];
 }
 
@@ -114,7 +114,7 @@ describe('Single Builder', () => {
   it('returns what callback returns', () => {
     const expectedReturn = Symbol();
     const callback = jest.fn().mockReturnValue(expectedReturn);
-    const { api: { the }} = Builder.register(({ the }) => the('1').and('2').do(), callback);
+    const [{ api: { the }}] = expression(({ the }) => the('1').and('2').do(), callback);
     expect(the('1').and('2').do()).toBe(expectedReturn);
   })
 
@@ -180,7 +180,7 @@ describe('Single Builder', () => {
     // Everytine we access an attribute or call a function
     // we should forward a copy of the arguments instead of using the same reference
     const [builder1, callback1] = buildFluentMock(({ the }) => the(Number).name(Number).do(Number));
-    const { the } = Builder.combine(builder1);
+    const { the } = combine(builder1);
 
     const chain = the(1).name(2);
 
@@ -200,7 +200,7 @@ describe('Single Builder', () => {
 
   it.skip('uncompleted sentences should not trigger calls', () => {
     const [builder1, callback1] = buildFluentMock(({ the }) => the(Number).name(Number).do(Number));
-    const { the } = Builder.combine(builder1);
+    const { the } = combine(builder1);
 
     the(1).name(2);
     the(1).name(3).do(4);
@@ -212,22 +212,51 @@ describe('Single Builder', () => {
 
 describe('Debug', () => {
   it('should create a debugId for each expression', () => {
-    const exp = expression(({ the }) => the(String).name.do(String).it(String), () => {});
-    expect(exp.builder.debugId).toEqual('the(String).name.do(String).it(String)');
+    const [exp] = expression(({ the }) => the(String).name.do(String).it(String), () => {});
+    expect(exp.expression.debugId).toEqual('the(String).name.do(String).it(String)');
+  })
+})
+
+describe('Aliases', () => {
+  it('should define expression aliases', () => {
+    const expectedReturn = Symbol();
+    const callback = jest.fn().mockReturnValue(expectedReturn);
+    const { the } = combine(
+      expression(
+        ({ the }) => the('1').and('2').do(),
+        ({ the }) => the('1').also.and('2').then.do(),
+        callback
+      ),
+    );
+
+    expect(the('1').and('2').do()).toBe(expectedReturn);
+    expect(the('1').also.and('2').then.do()).toBe(expectedReturn);
+  })
+
+  it('should not allow aliases with different signatures', () => {
+    const expectedReturn = Symbol();
+    const callback = jest.fn().mockReturnValue(expectedReturn);
+    const shouldThrow = () => expression(
+      ({ the }) => the('1').and('2').do(),
+      ({ the }) => the('1').also.and('3').then.do(),
+      callback
+    );
+
+    expect(shouldThrow).toThrow();
   })
 })
 
 describe('Combined Builders', () => {
   function buildFluentAPIMock(buildCallback, forceCallback?) {
     const callback = forceCallback ?? jest.fn();
-    const registeredFluentAPI = Builder.register(buildCallback,callback);
+    const registeredFluentAPI = expression(buildCallback,callback);
     return [registeredFluentAPI, callback];
   }
 
   combineTest('should combine several fluent apis', () => {
     const [builder1, callback1] = buildFluentAPIMock(({ the }) => the.man.should.do());
     const [builder2, callback2] = buildFluentAPIMock(({ el }) => el.man.should.do('a string'));
-    const { the, el } = Builder.combine(builder1, builder2);
+    const { the, el } = combine(builder1, builder2);
 
     el.man.should.do('a string')
     expect(callback1).not.toHaveBeenCalled();
@@ -244,7 +273,7 @@ describe('Combined Builders', () => {
   combineTest('combined functions: call correct callback based on argument', () => {
     const [builder1, callback1] = buildFluentAPIMock(({ the }) => the.man());
     const [builder2, callback2] = buildFluentAPIMock(({ the }) => the.man('a string'));
-    const { the } = Builder.combine(builder1, builder2);
+    const { the } = combine(builder1, builder2);
 
     the.man('a string')
     expect(callback1).not.toHaveBeenCalled();
@@ -255,7 +284,7 @@ describe('Combined Builders', () => {
   combineTest('prop can be callable and also be accessed like an object', () => {
     const [builder1, callback1] = buildFluentAPIMock(({ the }) => the.man.should().do());
     const [builder2, callback2] = buildFluentAPIMock(({ the }) => the.man.should.do('a string'));
-    const { the } = Builder.combine(builder1, builder2);
+    const { the } = combine(builder1, builder2);
 
     the.man.should.do('a string')
     expect(callback1).not.toHaveBeenCalled();
@@ -275,7 +304,7 @@ describe('Combined Builders', () => {
       const [builder1, callback1] = buildFluentAPIMock(({ the }) => the().do());
       const [builder2, callback2] = buildFluentAPIMock(({ the }) => the[nativefnProp]());
       const [builder3, callback3] = buildFluentAPIMock(({ the }) => the[nativefnProp].do());
-      const { the } = Builder.combine(builder2, builder1, builder3);
+      const { the } = combine(builder2, builder1, builder3);
       expect(typeof the).toBe('function');
   
       the().do();
@@ -305,7 +334,7 @@ describe('Combined Builders', () => {
     const [builder1, callback1] = buildFluentAPIMock(({ the }) => the.man('1').should.build());
     const [builder2, callback2] = buildFluentAPIMock(({ the }) => the.man('2').should.action());
     const [builder3, callback3] = buildFluentAPIMock(({ the }) => the.man('3').should.build());
-    const { the } = Builder.combine(builder1, builder2, builder3);
+    const { the } = combine(builder1, builder2, builder3);
 
     the.man('3').should.build()
     expect(callback1).not.toHaveBeenCalled();
@@ -335,7 +364,7 @@ describe('Combined Builders', () => {
 
     const [builder1, callback1] = buildFluentAPIMock(({ the }) => the(Parent).do());
     const [builder2, callback2] = buildFluentAPIMock(({ the }) => the(Child).do());
-    const { the } = Builder.combine(builder2, builder1);
+    const { the } = combine(builder2, builder1);
 
     const parent = new Parent();
     const child = new Child();
@@ -357,7 +386,7 @@ describe('Combined Builders', () => {
     class Child extends Parent {};
     const [builder1, callback1] = buildFluentAPIMock(({ the }) => the(Parent).action('2'));
     const [builder2, callback2] = buildFluentAPIMock(({ the }) => the(Child).action('1'));
-    const { the } = Builder.combine(builder2, builder1);
+    const { the } = combine(builder2, builder1);
 
     const child = new Child();
 
@@ -379,7 +408,7 @@ describe('Combined Builders', () => {
     class Child extends Parent {};
     const [builder1, callback1] = buildFluentAPIMock(({ the }) => the(Parent).action('1'));
     const [builder2, callback2] = buildFluentAPIMock(({ the }) => the(Child).do());
-    const { the } = Builder.combine(builder2, builder1);
+    const { the } = combine(builder2, builder1);
 
     const parent = new Parent();
     const child = new Child();
@@ -410,7 +439,7 @@ describe('Combined Builders', () => {
     class Child extends Parent {};
     const [builder1, callback1] = buildFluentAPIMock(({ the }) => the(Parent).action('1'));
     const [builder2, callback2] = buildFluentAPIMock(({ the }) => the(Child).action());
-    const { the } = Builder.combine(builder2, builder1);
+    const { the } = combine(builder2, builder1);
 
     const parent = new Parent();
     const child = new Child();
@@ -440,7 +469,7 @@ describe('Combined Builders', () => {
     const [builder1, callback1] = buildFluentAPIMock(({ the }) => the.do());
     const [builder2, callback2] = buildFluentAPIMock(({ the }) => the.do().add());
 
-    expect(() => Builder.combine(builder1, builder2)).toThrowError('Incompatible Fluent API');
+    expect(() => combine(builder1, builder2)).toThrowError('Incompatible Fluent API');
   });
   
   describe('Complexe Cases', () => {
@@ -464,7 +493,7 @@ describe('Combined Builders', () => {
       const [builder2, callback2] = buildFluentAPIMock(({ the }) => the.name());
       const [builder3, callback3] = buildFluentAPIMock(({ the }) => the().name.do());
       const [builder4, callback4] = buildFluentAPIMock(({ the }) => the().name().do());
-      const { the } = Builder.combine(builder1, builder2, builder3, builder4);
+      const { the } = combine(builder1, builder2, builder3, builder4);
   
       const testCallback = createCallbackTester([callback1, callback2, callback3, callback4])
       the.name.do(); testCallback(1, [undefined])

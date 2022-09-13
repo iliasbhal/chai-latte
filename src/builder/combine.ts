@@ -2,7 +2,7 @@ import { getPrototypeChain } from './lib/getPrototypeChain';
 import { ConfigurableCallback } from './lib/ConfigurableCallback';
 import { Expression, RegisteredAPI } from './register';
 
-export const combine = (...registeredAPIs: RegisteredAPI<any>[]) => {
+export const combine = (...expressions: RegisteredAPI<any>[][]) => {
   const sharedArgs = [];
   const combinedFluentAPI: any = {};
 
@@ -11,12 +11,16 @@ export const combine = (...registeredAPIs: RegisteredAPI<any>[]) => {
     configurableCallback.args = sharedArgs;
   });
 
-  registeredAPIs.forEach((registeredAPI, i) => {
-    registeredAPI.builder.setExpressionIdx(i);
+  expressions.forEach((expression, i) => {
+    expression.forEach((registeredAPI) => {
+      registeredAPI.expression.setExpressionIdx(i);
+    });
   });
 
-  registeredAPIs.forEach((registeredAPI, i) => {
-    mergeSubtree(registeredAPI.api, combinedFluentAPI);
+  expressions.forEach((expression, i) => {
+    expression.forEach((registeredAPI) => {
+      mergeSubtree(registeredAPI.api, combinedFluentAPI);
+    });
   });
 
   return combinedFluentAPI;

@@ -8,6 +8,8 @@ export default compile(
 
   expression(
     ({ the }) => the(Boolean).and.well(Boolean),
+    ({ the }) => the(Boolean).and.very.well(Boolean),
+    ({ the }) => the(Boolean).and.realy.well(Boolean),
     (isAlive: Boolean, isWell: Boolean) => 'Second',
   )
 );

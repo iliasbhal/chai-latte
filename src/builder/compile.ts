@@ -8,7 +8,7 @@ export interface CompiledBuilder<T> {
   __callbacks: typeof ConfigurableCallback;
 };
 
-export function compile<T extends RegisteredAPI<Function>[]>(...expressions: T) : CompiledBuilder<T> {
+export function compile<T extends RegisteredAPI<Function>[][]>(...expressions: T) : CompiledBuilder<T> {
   const combinedExpresions = combine(...expressions) as { [key: string]: any; };
   const internalAPI = {
     __callbacks: ConfigurableCallback,

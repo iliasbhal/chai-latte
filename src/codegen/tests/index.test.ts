@@ -2,8 +2,7 @@
 import path from 'path';
 import dedent from 'dedent';
 import { createTypegingForBuilders, generateTypedApiFromPath } from '..';
-import { Builder } from '../../builder'
-import { compile, expression } from '../..'
+import { compile, expression } from '../..';
 
 describe('Codegen', () => {
     it('should throw when file doesnt exist', async () => {
@@ -49,6 +48,7 @@ describe('Codegen', () => {
       
         expression(
           ({ the }) => the(Boolean).and.well(String),
+          ({ the }) => the(Boolean).and.very.well(String),
           (isAlive: Boolean, isWell: Boolean) => 'Second',
         )
       );
@@ -65,7 +65,7 @@ describe('Codegen', () => {
         import builder from './fixtures';
 
         type Expressions = typeof builder.__expressions;
-        type ExpressionCallback<Idx extends number> = Expressions[Idx]['callback'];
+        type ExpressionCallback<Idx extends number> = Expressions[Idx][0]['callback'];
         type Arg<Idx extends number, ArgIndex extends number> = Parameters<ExpressionCallback<Idx>>[ArgIndex];
         type Return<Idx extends number> = ReturnType<ExpressionCallback<Idx>>;
 
@@ -78,6 +78,11 @@ describe('Codegen', () => {
                 };
                 well: {
                   (str: Arg<3, 1>) : Return<3>;
+                };
+                very: {
+                  well: {
+                    (str: Arg<3, 1>) : Return<3>;
+                  };
                 };
               };
             };

@@ -3,22 +3,31 @@ import { ConfigurableCallback } from './lib/ConfigurableCallback';
 export interface RegisteredAPI<Callback extends Function> {
   api: any,
   callback: Callback,
-  builder: Expression<Callback>,
+  expression: Expression<Callback>,
 };
 
-export const register = <Callback extends Function>(
-  createUsePattern: (fluentProxy: any) => void,
-  callback: Callback,
-) : RegisteredAPI<Callback> => {
-  const builder = new Expression(callback);
-  const buildListener = builder.createBuilderProxy();
-  createUsePattern(buildListener);
-  const api = builder.getFluentAPI();
-  return {
-    api,
-    callback,
-    builder,
-  };
+type FluentCreator = (fluentProxy: any) => void;
+
+
+type Register = 
+  (<Callback extends Function>(createUsePattern: FluentCreator, callback: Callback) => RegisteredAPI<Callback>[])
+ & (<Callback extends Function>(createUsePattern: FluentCreator, createUsePattern2: FluentCreator, callback: Callback) => RegisteredAPI<Callback>[])
+ & (<Callback extends Function>(createUsePattern: FluentCreator, createUsePattern2: FluentCreator, createUsePattern3: FluentCreator, callback: Callback) => RegisteredAPI<Callback>[]);
+
+export const register : Register = (...args) => {
+  const callback = args.pop();
+  
+  return args.map((createUsePattern) => {
+    const expression = new Expression(callback);
+    const buildListener = expression.createBuilderProxy();
+    createUsePattern(buildListener);
+    const api = expression.getFluentAPI();
+    return {
+      api,
+      callback,
+      expression,
+    };
+  })
 };
 
 export class Expression<Callback extends Function> {
