@@ -3,14 +3,14 @@ import { ConfigurableCallback } from './lib/ConfigurableCallback';
 export interface RegisteredAPI<Callback extends Function> {
   api: any,
   callback: Callback,
-  builder: FluentBuilder<Callback>,
+  builder: Expression<Callback>,
 };
 
 export const register = <Callback extends Function>(
   createUsePattern: (fluentProxy: any) => void,
   callback: Callback,
 ) : RegisteredAPI<Callback> => {
-  const builder = new FluentBuilder(callback);
+  const builder = new Expression(callback);
   const buildListener = builder.createBuilderProxy();
   createUsePattern(buildListener);
   const api = builder.getFluentAPI();
@@ -21,20 +21,28 @@ export const register = <Callback extends Function>(
   };
 };
 
-export class FluentBuilder<Callback extends Function> {
+export class Expression<Callback extends Function> {
   fluentAPI: any = {};
   pointer: BuildPointer;
   static callbacks = new WeakSet();
+  callbacks = new Set<ConfigurableCallback>();
   callback: Callback;
   args = [];
   constructor(callback: Callback) {
     this.callback = callback;
-    FluentBuilder.callbacks.add(callback);
+    Expression.callbacks.add(callback);
     this.pointer = new BuildPointer(this.fluentAPI);
   }
 
+  index: number = 0;
+  setExpressionIdx(index: number) {
+    this.index = index;
+    this.callbacks.forEach((callback) => {
+    });
+  }
+
   static isFinalCallback(cb: any) {
-    return FluentBuilder.callbacks.has(cb);
+    return Expression.callbacks.has(cb);
   }
 
   getFluentAPI() : any {
@@ -42,7 +50,9 @@ export class FluentBuilder<Callback extends Function> {
   }
 
   createConfigurableCallback() {
-    return new ConfigurableCallback(this.callback, this.args);
+    const callback = new ConfigurableCallback(this);
+    this.callbacks.add(callback);
+    return callback;
   }
 
   isLastPointerCallback() {
@@ -65,10 +75,12 @@ export class FluentBuilder<Callback extends Function> {
     this.debugId += '(' + arg.name + ')';
   }
 
+  callbackCount = 0;
   handleFunctionCalled(arg: any) {
     const fluentFunction = this.createConfigurableCallback();
     this.pointer.overrideLastPointer(fluentFunction.callback)
     fluentFunction.updateArg(arg);
+    fluentFunction.setCallIdx(this.callbackCount++);
     this.updateDebugFunction(arg);
   }
 

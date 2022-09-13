@@ -4,6 +4,9 @@
   "description": "Build expressive & readable fluent interface libraries.",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
+  "bin": {
+    "chai-latte": "./build/cli.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/iliasbhal/chai-latte.git"
@@ -29,9 +32,6 @@
     "test": "jest",
     "build": "tsc",
     "build:watch": "tsc -w"
-  },
-  "bin": {
-    "chai-latte": "./build/cli.js"
   },
   "peerDependencies": {},
   "dependencies": {

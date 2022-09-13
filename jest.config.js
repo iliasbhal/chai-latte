@@ -4,7 +4,7 @@ module.exports = {
     '^.+\\.(ts|tsx|js|jsx)$': 'ts-jest',
   },
   testPathIgnorePatterns: [
-    'scripts/dist',
+    'build',
   ],
   coveragePathIgnorePatterns: [
     'builder/codegen/tests/example',

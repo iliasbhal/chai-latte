@@ -2,22 +2,31 @@ import { getPrototypeChain  } from "./getPrototypeChain";
 import { getPrimitiveType } from "./getPrimitiveType";
 
 export class ConfigurableCallback  {
+  static list = new Set();
   static configByCallback = new Map<any, ConfigurableCallback>();
   static configByProps = new Map<any, ConfigurableCallback>();
   static getBuilderOf(key) { 
     return this.configByCallback.get(key) || this.configByProps.get(key);
   }
 
+  expression: any;
   returnByArg = new Map();
   props = {};
   args: any = [];
 
   private execute: any;
-  constructor(callback, args) {
-    this.execute = callback;
-    this.args = args ?? [];
+  constructor(expression) {
+    this.expression = expression;
+    this.execute = expression.callback;
+    this.args = expression.args ?? [];
+    ConfigurableCallback.list.add(this);
     ConfigurableCallback.configByCallback.set(this.callback, this);
+    ConfigurableCallback.configByCallback.set(this.handleFunctionCall, this);
     ConfigurableCallback.configByProps.set(this.props, this);
+
+    // console.log('ConfigurableCallback.configByCallback', ConfigurableCallback.configByCallback);
+
+    // (this.handleFunctionCall as any).aaaa = "AAAAAA"
   }
 
   lastArg: any = null;
@@ -29,6 +38,16 @@ export class ConfigurableCallback  {
   updateArg(arg: any) {
     this.lastArg = arg;
     this.returnByArg.set(this.lastArg, this.execute);
+  }
+
+  callIndex: number;
+  setCallIdx(idx: number) {
+    this.callIndex = idx;
+  }
+
+  originCallbackByArg = new Map<any, ConfigurableCallback>();
+  setArgOrigin(arg, callback) {
+    this.originCallbackByArg.set(arg, callback);
   }
 
   getMatchedReturn(arg: any) : any {
@@ -56,13 +75,13 @@ export class ConfigurableCallback  {
     return this.args;
   }
 
-  onFunctionCalled = (arg) => {
+  handleFunctionCall = (arg) => {
     const matchedReturn = this.getMatchedReturn(arg);
 
     switch (typeof matchedReturn) {
       case 'function':
         const allArgs = [...this.getArgs(), arg];
-        // clears accumulation of argumens for future calls
+        // clears accumulation of arguments for future calls
         this.getArgs().splice(0);
         return matchedReturn(...allArgs);
       case 'object': 
@@ -74,7 +93,7 @@ export class ConfigurableCallback  {
     }
   };
 
-  callback = new Proxy(this.onFunctionCalled, {
+  callback = new Proxy(this.handleFunctionCall, {
     get: (target, prop, receiver) => {
       if (this.props[prop]) {
         return this.props[prop];

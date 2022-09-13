@@ -1,14 +1,18 @@
 import { getPrototypeChain } from './lib/getPrototypeChain';
 import { ConfigurableCallback } from './lib/ConfigurableCallback';
-import { FluentBuilder, RegisteredAPI } from './register';
+import { Expression, RegisteredAPI } from './register';
 
 export const combine = (...registeredAPIs: RegisteredAPI<any>[]) => {
   const sharedArgs = [];
   const combinedFluentAPI: any = {};
 
   // share argument between all functions in the subtree.
-  Array.from(ConfigurableCallback.configByCallback).forEach(([_, configurabltCallback]) => {
-    configurabltCallback.args = sharedArgs;
+  Array.from(ConfigurableCallback.configByCallback).forEach(([_, configurableCallback]) => {
+    configurableCallback.args = sharedArgs;
+  });
+
+  registeredAPIs.forEach((registeredAPI, i) => {
+    registeredAPI.builder.setExpressionIdx(i);
   });
 
   registeredAPIs.forEach((registeredAPI, i) => {
@@ -70,6 +74,7 @@ const mergeCallbackWithCallback = (source, target) => {
 
   srcCallbackBuilder.returnByArg.forEach((returned, arg) => {
     if (!targetCallbackBuilder.returnByArg.get(arg)) {
+      targetCallbackBuilder.setArgOrigin(arg, srcCallbackBuilder);
       targetCallbackBuilder.returnByArg.set(arg, returned);
     } else {
       mergeSubtree(returned, targetCallbackBuilder.returnByArg.get(arg))
@@ -93,7 +98,7 @@ const mergeCallbackWithCallback = (source, target) => {
 
 
 const mergeObjectWithFunctionProps = (source, target) => {
-  avoidFluentOverride(source, target);
+  ensureExpressionsAreNotOveridden(source, target);
 
   const targetConfig = ConfigurableCallback.getBuilderOf(target);
   Object.entries(source).forEach(([srcKey, srcVal]) => {
@@ -116,7 +121,7 @@ const mergeObjectWithFunctionProps = (source, target) => {
 }
 
 const mergeFunctionWithObject = (source, target) => { 
-  avoidFluentOverride(source, target);
+  ensureExpressionsAreNotOveridden(source, target);
   
   const { parent, prop } = parentTargetByTarget.get(target);
   parent[prop] = source;
@@ -128,9 +133,9 @@ const mergeFunctionWithObject = (source, target) => {
   return mergeObjectWithFunctionProps(target, source);
 }
 
-const avoidFluentOverride = (source, target) => {
-  const isSrcFinal = FluentBuilder.isFinalCallback(source);
-  const isTargetFinal = FluentBuilder.isFinalCallback(target);
+const ensureExpressionsAreNotOveridden = (source, target) => {
+  const isSrcFinal = Expression.isFinalCallback(source);
+  const isTargetFinal = Expression.isFinalCallback(target);
   if (isSrcFinal || isTargetFinal) {
     // should not override a preexisting API.
     // ex: defining two expressions like the.guy('xyz') and the.guy('xyz').are.incompatible();
