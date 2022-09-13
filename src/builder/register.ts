@@ -10,9 +10,11 @@ type FluentCreator = (fluentProxy: any) => void;
 
 
 type Register = 
-  (<Callback extends Function>(createUsePattern: FluentCreator, callback: Callback) => RegisteredAPI<Callback>[])
- & (<Callback extends Function>(createUsePattern: FluentCreator, createUsePattern2: FluentCreator, callback: Callback) => RegisteredAPI<Callback>[])
- & (<Callback extends Function>(createUsePattern: FluentCreator, createUsePattern2: FluentCreator, createUsePattern3: FluentCreator, callback: Callback) => RegisteredAPI<Callback>[]);
+  (<Callback extends Function>(create: FluentCreator, callback: Callback) => RegisteredAPI<Callback>[])
+ & (<Callback extends Function>(create: FluentCreator, create2: FluentCreator, callback: Callback) => RegisteredAPI<Callback>[])
+ & (<Callback extends Function>(create: FluentCreator, create2: FluentCreator, create3: FluentCreator, callback: Callback) => RegisteredAPI<Callback>[])
+ & (<Callback extends Function>(create: FluentCreator, create2: FluentCreator, create3: FluentCreator, create4: FluentCreator, callback: Callback) => RegisteredAPI<Callback>[])
+ & (<Callback extends Function>(create: FluentCreator, create2: FluentCreator, create3: FluentCreator, create4: FluentCreator, create5: FluentCreator, callback: Callback) => RegisteredAPI<Callback>[]);
 
 export const register : Register = (...args) => {
   const callback = args.pop();
