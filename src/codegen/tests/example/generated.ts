@@ -45,6 +45,26 @@ type Root = {
       };
     };
   };
+  given: {
+    (state: Arg<2, 0>) : {
+      when: {
+        (event: Arg<2, 1>) : {
+          then: {
+            it: {
+              becomes: {
+                (state: Arg<2, 2>) : Return<2>;
+              };
+              does: {
+                (action: Arg<3, 2>) : Return<3>;
+              };
+            };
+            (state: Arg<2, 2>) : Return<2>;
+            (action: Arg<3, 2>) : Return<3>;
+          };
+        };
+      };
+    };
+  };
 };
 
 export default builder as unknown as Root;

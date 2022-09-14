@@ -19,7 +19,6 @@ describe('Codegen', () => {
       };
 
       await generateTypedApiFromPath(inOutConfig);
-      
     })
 
 
@@ -28,7 +27,10 @@ describe('Codegen', () => {
         input: path.resolve(__dirname, './example/fixtures'),
       };
 
+      class Common {};
       class Type1 {};
+      class Type2 {};
+      class Type3 {};
 
       const compiled = compile(
         expression(
@@ -42,15 +44,27 @@ describe('Codegen', () => {
         ),
 
         expression(
-          ({ the }) => the(Type1).and.type(Boolean),
-          (isAlive: Type1, isWell: boolean) => 'First',
+          ({ the }) => the(Common).and.type(Boolean),
+          (isAlive: Common, isWell: boolean) => 'First',
         ),
       
         expression(
           ({ the }) => the(Boolean).and.well(String),
           ({ the }) => the(Boolean).and.very.well(String),
           (isAlive: Boolean, isWell: Boolean) => 'Second',
-        )
+        ),
+
+        expression(
+          ({ first }) => first(Type1).second(Type2).then.third(Type1),
+          ({ first }) => first(Type1).second(Type2).then(Type1),
+          (type1 : Type1, type2: Type2, nextType1: Type1) => 'Third',
+        ),
+
+        expression(
+          ({ first }) => first(Type1).second(Type2).then.fourth(Type3),
+          ({ first }) => first(Type1).second(Type2).then(Type3),
+          (type1 : Type1, type2: Type2, type3: Type3) => 'Fourth',
+        ),
       );
 
       const typings = await createTypegingForBuilders(inOutConfig, compiled);
@@ -93,10 +107,28 @@ describe('Codegen', () => {
                 };
               };
             };
-            (type1: Arg<2, 0>) : {
+            (common: Arg<2, 0>) : {
               and: {
                 type: {
                   (bool: Arg<2, 1>) : Return<2>;
+                };
+              };
+            };
+          };
+          first: {
+            (type1: Arg<4, 0>) : {
+              second: {
+                (type2: Arg<4, 1>) : {
+                  then: {
+                    third: {
+                      (type1: Arg<4, 2>) : Return<4>;
+                    };
+                    fourth: {
+                      (type3: Arg<5, 2>) : Return<5>;
+                    };
+                    (type1: Arg<4, 2>) : Return<4>;
+                    (type3: Arg<5, 2>) : Return<5>;
+                  };
                 };
               };
             };

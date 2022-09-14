@@ -106,21 +106,19 @@ export const createTypegingForBuilders = async (config: InputOutputConfig, compi
       typings += `${tabs.start}${key}: ${buildValue(tabs.next, callback.props[key])}\n`
     })
 
-    if (isLastCall) {
-      const argName = getArgumentNameFromArgType(returnByArg[0]);
-      const argType = getArgumentTypeFromCallback(callback, returnByArg[0]);
-      const originalCallback = callback.originCallbackByArg.get(returnByArg[0]);
-      const rowIdx = (originalCallback || callback).expression.index;
-      typings += `${tabs.start}(${argName}: ${argType}) : Return<${rowIdx}>;\n`
+    callback.returnByArg.forEach((value, arg) => {
+      const argName = getArgumentNameFromArgType(arg);
+      const argType = getArgumentTypeFromCallback(callback, arg);
+      const functionCallType = `${tabs.start}(${argName}: ${argType})`;
 
-    } else {
-      callback.returnByArg.forEach((value, arg) => {
-        const argName = getArgumentNameFromArgType(arg);
-        const argType = getArgumentTypeFromCallback(callback, arg);
-        typings += `${tabs.start}(${argName}: ${argType}) : ${buildKeys(tabs.next, value)}\n`
-      });
-    }
-
+      if (isLastCall) {
+        const originalCallback = callback.originCallbackByArg.get(arg);
+        const rowIdx = (originalCallback || callback).expression.index;
+        typings += `${functionCallType} : Return<${rowIdx}>;\n`
+      } else {
+        typings += `${functionCallType} : ${buildKeys(tabs.next, value)}\n`
+      }
+    })
 
     typings += `${tabs.end}};`
     return typings;
